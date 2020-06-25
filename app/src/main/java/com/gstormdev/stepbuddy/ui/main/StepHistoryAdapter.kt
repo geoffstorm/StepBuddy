@@ -4,8 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.gstormdev.stepbuddy.R
 import com.gstormdev.stepbuddy.databinding.StepListItemBinding
 import com.gstormdev.stepbuddy.model.StepHistory
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -32,7 +34,8 @@ class StepHistoryAdapter: RecyclerView.Adapter<StepHistoryViewHolder>() {
 
 class StepHistoryViewHolder(private val binding: StepListItemBinding): RecyclerView.ViewHolder(binding.root) {
     fun bind(model: StepHistory) {
-        binding.tvSteps.text = model.steps.toString()
+        binding.tvSteps.text = binding.root.context.getString(R.string.step_count, model.steps)
+        binding.tvDate.text = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(model.dateTime)
     }
 }
 

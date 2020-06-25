@@ -40,6 +40,7 @@ class MainViewModel : ViewModel() {
         if (!GoogleSignIn.hasPermissions(googleAccount, fitnessOptions)) {
             GoogleSignIn.requestPermissions(fragment, requestCode, googleAccount, fitnessOptions)
         } else {
+            // Would be nice to have some caching system so we don't have to make the request every time
             retrieveFitData()
         }
     }
@@ -48,7 +49,7 @@ class MainViewModel : ViewModel() {
         val cal = Calendar.getInstance()
         cal.time = Date()
         val endTime = cal.endOfDay().timeInMillis
-        cal.add(Calendar.DATE, -3)
+        cal.add(Calendar.MONTH, -3)
         val startTime = cal.startOfDay().timeInMillis
 
         val readRequest = DataReadRequest.Builder()

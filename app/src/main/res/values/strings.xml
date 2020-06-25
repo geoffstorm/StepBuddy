@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">StepBuddy</string>
+    <string name="step_count">%d steps</string>
 </resources>
