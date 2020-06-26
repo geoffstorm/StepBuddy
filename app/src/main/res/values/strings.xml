@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">StepBuddy</string>
     <string name="step_count">%d steps</string>
+    <string name="fetch_error">Unable to retrieve step count</string>
+    <string name="dismiss">Dismiss</string>
 </resources>

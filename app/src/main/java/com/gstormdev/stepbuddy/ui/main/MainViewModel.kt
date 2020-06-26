@@ -16,6 +16,7 @@ import com.gstormdev.stepbuddy.StepApplication
 import com.gstormdev.stepbuddy.model.StepHistory
 import com.gstormdev.stepbuddy.util.endOfDay
 import com.gstormdev.stepbuddy.util.startOfDay
+import com.gstormdev.stepbuddy.vo.Resource
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
@@ -29,8 +30,8 @@ class MainViewModel : ViewModel() {
     @Inject
     lateinit var googleAccount: GoogleSignInAccount
 
-    private val _stepHistory = MutableLiveData<List<StepHistory>>(emptyList())
-    val stepHistory: LiveData<List<StepHistory>> = _stepHistory
+    private val _stepHistory = MutableLiveData<Resource<List<StepHistory>>>(Resource.loading(null))
+    val stepHistory: LiveData<Resource<List<StepHistory>>> = _stepHistory
 
     init {
         StepApplication.appComponent.inject(this)
@@ -68,11 +69,11 @@ class MainViewModel : ViewModel() {
                                 StepHistory(it.getStartTime(TimeUnit.MILLISECONDS), it.getValue(Field.FIELD_STEPS).asInt())
                             }
                             .sortedByDescending { it.dateTime }
-                    _stepHistory.postValue(history)
+                    _stepHistory.postValue(Resource.success(history))
                 }
             }
             .addOnFailureListener { exception ->
-                // TODO
+                _stepHistory.postValue(Resource.error(exception.localizedMessage ?: "", null))
             }
     }
 }

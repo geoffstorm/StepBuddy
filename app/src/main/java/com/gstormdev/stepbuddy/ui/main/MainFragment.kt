@@ -11,7 +11,10 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
+import com.gstormdev.stepbuddy.R
 import com.gstormdev.stepbuddy.databinding.MainFragmentBinding
+import com.gstormdev.stepbuddy.vo.Status
 
 class MainFragment : Fragment() {
 
@@ -42,7 +45,18 @@ class MainFragment : Fragment() {
         }
 
         viewModel.stepHistory.observe(viewLifecycleOwner, Observer {
-            historyAdapter.setData(it)
+            binding.progress.visibility = if (it.status == Status.LOADING) View.VISIBLE else View.GONE
+            when (it.status) {
+                Status.SUCCESS -> {
+                    historyAdapter.setData(it.data!!)
+                }
+                Status.ERROR -> {
+                    Snackbar.make(binding.root, R.string.fetch_error, Snackbar.LENGTH_INDEFINITE)
+                            .setAction(R.string.dismiss, null)
+                            .show()
+                }
+                Status.LOADING -> { }
+            }
         })
 
         viewModel.checkFitPermissions(this, RC_FITNESS_STEPS)
