@@ -1,25 +1,21 @@
 package com.gstormdev.stepbuddy
 
 import android.app.Application
-import android.content.Context
-import com.gstormdev.stepbuddy.di.DaggerFitComponent
-import com.gstormdev.stepbuddy.di.FitComponent
-import com.gstormdev.stepbuddy.di.FitModule
+import com.gstormdev.stepbuddy.di.FitAppInjector
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasAndroidInjector
+import javax.inject.Inject
 
-class StepApplication : Application() {
+class StepApplication : Application(), HasAndroidInjector {
+
+    @Inject
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
 
     override fun onCreate() {
         super.onCreate()
-        context = this
+        FitAppInjector.init(this)
     }
 
-    companion object {
-        lateinit var context: Context
-
-        val appComponent: FitComponent by lazy {
-            DaggerFitComponent.builder()
-                    .fitModule(FitModule(context))
-                    .build()
-        }
-    }
+    override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
 }

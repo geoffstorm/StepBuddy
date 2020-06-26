@@ -23,19 +23,14 @@ import java.util.Date
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class MainViewModel : ViewModel() {
-    @Inject
-    lateinit var fitnessOptions: FitnessOptions
-
-    @Inject
-    lateinit var googleAccount: GoogleSignInAccount
+class MainViewModel @Inject constructor(
+    private val app: StepApplication,
+    private val fitnessOptions: FitnessOptions,
+    private val googleAccount: GoogleSignInAccount
+) : ViewModel() {
 
     private val _stepHistory = MutableLiveData<Resource<List<StepHistory>>>(Resource.loading(null))
     val stepHistory: LiveData<Resource<List<StepHistory>>> = _stepHistory
-
-    init {
-        StepApplication.appComponent.inject(this)
-    }
 
     fun checkFitPermissions(fragment: Fragment, requestCode: Int) {
         if (!GoogleSignIn.hasPermissions(googleAccount, fitnessOptions)) {
@@ -59,7 +54,7 @@ class MainViewModel : ViewModel() {
             .bucketByTime(1, TimeUnit.DAYS)
             .build()
 
-        Fitness.getHistoryClient(StepApplication.context, googleAccount)
+        Fitness.getHistoryClient(app.applicationContext, googleAccount)
             .readData(readRequest)
             .addOnSuccessListener { response ->
                 // listener is run on the main thread, so spawn a coroutine to stay off of it

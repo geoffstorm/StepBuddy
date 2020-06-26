@@ -1,11 +1,22 @@
 package com.gstormdev.stepbuddy.di
 
-import com.gstormdev.stepbuddy.ui.main.MainViewModel
+import com.gstormdev.stepbuddy.StepApplication
+import dagger.BindsInstance
 import dagger.Component
+import dagger.android.AndroidInjectionModule
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [FitModule::class])
+@Component(modules = [AndroidInjectionModule::class, FitModule::class, FitActivityModule::class])
 interface FitComponent {
-    fun inject(vm: MainViewModel)
+    @Component.Builder
+    interface Builder {
+
+        @BindsInstance
+        fun application(application: StepApplication): Builder
+
+        fun build(): FitComponent
+    }
+
+    fun inject(app: StepApplication)
 }

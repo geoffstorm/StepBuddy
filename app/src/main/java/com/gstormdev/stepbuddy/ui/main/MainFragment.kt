@@ -14,13 +14,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.gstormdev.stepbuddy.R
 import com.gstormdev.stepbuddy.databinding.MainFragmentBinding
+import com.gstormdev.stepbuddy.di.Injectable
 import com.gstormdev.stepbuddy.vo.Status
+import javax.inject.Inject
 
+@Injectable
 class MainFragment : Fragment() {
 
     companion object {
         private const val RC_FITNESS_STEPS = 100
     }
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var viewModel: MainViewModel
     private lateinit var binding: MainFragmentBinding
@@ -35,7 +41,7 @@ class MainFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
 
         binding.recyclerView.apply {
             setHasFixedSize(true)
